@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Teach the Learner: Five Areas of Special Educational Need</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF1F0; --surface:#FFFFFF; --sunk:#E2E8E6; --ink:#1F2A3A; --muted:#566273; --line:#C9D2D0;
+  --adhd:#B97A00; --adhd-bg:#FBEFD3;
+  --ebd:#16756F; --ebd-bg:#D8EFEC;
+  --sld:#4050B5; --sld-bg:#E1E4F8;
+  --idd:#963F73; --idd-bg:#F5E1EC;
+  --spl:#3F7A2C; --spl-bg:#E1EFD9;
+  --good:#2E7D32; --good-bg:#E3F2E1; --bad:#B3261E; --bad-bg:#FBE4E2;
+  --focus:#4050B5;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131920; --surface:#1B232D; --sunk:#232D39; --ink:#E6EAF0; --muted:#A3AEBC; --line:#34414F;
+    --adhd:#F0B53A; --adhd-bg:#3A2E12; --ebd:#4CC3B9; --ebd-bg:#12332F; --sld:#98A3F2; --sld-bg:#232A52;
+    --idd:#E08CC0; --idd-bg:#3A1F31; --spl:#8FCB76; --spl-bg:#1F3318;
+    --good:#7FCB80; --good-bg:#1D3320; --bad:#F2918A; --bad-bg:#3D1F1C; --focus:#98A3F2;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131920; --surface:#1B232D; --sunk:#232D39; --ink:#E6EAF0; --muted:#A3AEBC; --line:#34414F;
+  --adhd:#F0B53A; --adhd-bg:#3A2E12; --ebd:#4CC3B9; --ebd-bg:#12332F; --sld:#98A3F2; --sld-bg:#232A52;
+  --idd:#E08CC0; --idd-bg:#3A1F31; --spl:#8FCB76; --spl-bg:#1F3318;
+  --good:#7FCB80; --good-bg:#1D3320; --bad:#F2918A; --bad-bg:#3D1F1C; --focus:#98A3F2;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 "Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3,h4{font-family:"Bricolage Grotesque","Atkinson Hyperlegible",system-ui,sans-serif;line-height:1.15;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:6px}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.nav ol{list-style:none;margin:0 auto;padding:10px 20px;max-width:860px;display:flex;gap:6px;overflow-x:auto}
+.nav button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:.9rem;white-space:nowrap;display:flex;gap:6px;align-items:center}
+.nav button .n{font-weight:700;color:var(--muted)}
+.nav button[aria-current="step"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.nav button[aria-current="step"] .n{color:var(--bg)}
+.nav button.done .n::after{content:" ✓"}
+
+/* hero */
+.hero{padding:48px 0 28px}
+.hero h1{font-size:clamp(2.4rem,7vw,4.2rem);font-weight:800;letter-spacing:-.02em;max-width:14ch}
+.hero p{max-width:60ch;color:var(--muted);margin:16px 0 0}
+.stripe{display:flex;height:10px;border-radius:5px;overflow:hidden;margin-top:28px;max-width:420px}
+.stripe span{flex:1}
+.note{font-size:.92rem;color:var(--muted);border-left:3px solid var(--line);padding-left:12px;margin:20px 0 0;max-width:62ch}
+
+/* sections */
+section.part{display:none;padding:28px 0 48px}
+section.part.active{display:block}
+.part>h2{font-size:clamp(1.7rem,4.5vw,2.3rem);font-weight:700;margin-bottom:6px}
+.lede{color:var(--muted);max-width:62ch;margin:0 0 24px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:36px;flex-wrap:wrap}
+.btn{border:0;background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:10px;font-weight:700}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.4;cursor:default}
+
+/* myth/fact */
+.mf{display:grid;gap:12px}
+.mf-item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.mf-item p.claim{margin:0 0 12px;font-weight:700;font-size:1.08rem}
+.mf-actions{display:flex;gap:8px}
+.mf-actions button{border:1px solid var(--line);background:var(--sunk);border-radius:8px;padding:8px 16px;font-weight:700}
+.mf-actions button:disabled{cursor:default}
+.mf-actions button.picked-right{background:var(--good-bg);border-color:var(--good);color:var(--good)}
+.mf-actions button.picked-wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.feedback{margin:12px 0 0;padding:10px 12px;border-radius:8px;font-size:.98rem}
+.feedback.good{background:var(--good-bg)}
+.feedback.bad{background:var(--bad-bg)}
+.feedback strong{display:inline}
+.score{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.1rem;margin-top:18px}
+
+/* explorer */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tab{border:2px solid var(--c);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 14px;font-weight:700;text-align:left}
+.tab small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+.tab[aria-selected="true"]{background:var(--c);color:var(--surface)}
+.tab[aria-selected="true"] small{color:var(--surface);opacity:.85}
+.panel{background:var(--surface);border-radius:14px;border-top:8px solid var(--c);padding:22px 22px 10px}
+.panel h3{font-size:1.9rem;font-weight:800;color:var(--c)}
+.panel .def{margin:10px 0 18px;max-width:64ch}
+details{border-top:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;padding:14px 0;font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.12rem;display:flex;justify-content:space-between;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:1.4rem;color:var(--c);line-height:1}
+details[open] summary::after{content:"−"}
+.dbody{padding:0 0 16px}
+.dbody ul{margin:0;padding-left:1.2em}
+.dbody li{margin:3px 0}
+.types{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.type{background:var(--cbg);border-radius:10px;padding:12px 14px}
+.type h4{font-size:1rem;margin-bottom:4px}
+.type p,.type ul{margin:0;font-size:.95rem}
+.iv{display:grid;gap:8px}
+.iv div{background:var(--sunk);border-radius:8px;padding:10px 12px}
+.iv b{display:block}
+.iv span{font-size:.95rem;color:var(--muted)}
+.pull{background:var(--cbg);border-radius:10px;padding:12px 14px;margin:0 0 16px;font-size:.98rem}
+.explored{font-size:.92rem;color:var(--muted);margin-top:14px}
+
+/* sort */
+.sort-help{background:var(--surface);border:1px dashed var(--line);border-radius:10px;padding:10px 14px;font-size:.95rem;margin-bottom:16px}
+.deck{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;min-height:48px}
+.card{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 14px;text-align:left;max-width:100%}
+.card[aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:1px}
+.card.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.bins{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.bin{border:2px solid var(--c);background:var(--cbg);border-radius:12px;padding:12px;text-align:left;min-height:110px;display:flex;flex-direction:column;gap:6px}
+.bin h4{color:var(--c);font-size:1.05rem}
+.bin .placed{font-size:.85rem;background:var(--surface);border-radius:6px;padding:4px 8px;color:var(--ink)}
+.bin:disabled{cursor:default}
+.sort-msg{min-height:1.6em;margin:12px 0 0;font-weight:700}
+
+/* scenarios & quiz */
+.scn{background:var(--surface);border-radius:14px;padding:22px;border:1px solid var(--line)}
+.scn .who{display:inline-block;font-size:.85rem;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--cbg);color:var(--c);margin-bottom:10px}
+.scn .story{font-size:1.1rem;margin:0 0 16px;max-width:64ch}
+.opts{display:grid;gap:8px}
+.opt{border:1px solid var(--line);background:var(--sunk);border-radius:10px;padding:12px 14px;text-align:left}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--good-bg);border-color:var(--good)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad)}
+.counter{color:var(--muted);font-size:.92rem;margin-bottom:10px}
+.meter{height:8px;background:var(--sunk);border-radius:4px;overflow:hidden;margin-bottom:16px}
+.meter i{display:block;height:100%;background:var(--ink);width:0;transition:width .3s}
+.result{background:var(--surface);border-radius:14px;padding:24px;border:1px solid var(--line)}
+.result .big{font-family:"Bricolage Grotesque",sans-serif;font-size:3rem;font-weight:800;line-height:1}
+
+/* wrap-up */
+.tablewrap{overflow-x:auto;background:var(--surface);border-radius:12px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.95rem}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:"Bricolage Grotesque",sans-serif}
+td:first-child{font-weight:700;border-left:6px solid var(--c)}
+tr:last-child td{border-bottom:0}
+.principle{margin:32px 0;padding:28px 0;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.principle p.big{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(1.8rem,5.5vw,3rem);font-weight:800;line-height:1.1;margin:0 0 12px;letter-spacing:-.01em}
+.principle p{max-width:62ch;margin:0}
+label.r{display:block;font-weight:700;margin:18px 0 6px}
+textarea{width:100%;min-height:110px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:12px;font:inherit;resize:vertical}
+.saved{font-size:.88rem;color:var(--muted);min-height:1.3em}
+footer{padding:20px 0 40px;color:var(--muted);font-size:.88rem}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Lesson parts"><ol id="navlist"></ol></nav>
+
+<main class="wrap">
+  <header class="hero">
+    <h1>Teach the learner, not the label</h1>
+    <p>An interactive lesson on five areas of special educational need: ADHD, emotional and behavioral disability, specific learning disability, intellectual and developmental disabilities, and speech and language disorders. Work through the six parts in order, or jump to any part from the bar above.</p>
+    <div class="stripe" aria-hidden="true"><span style="background:var(--adhd)"></span><span style="background:var(--ebd)"></span><span style="background:var(--sld)"></span><span style="background:var(--idd)"></span><span style="background:var(--spl)"></span></div>
+    <p class="note">Categories and terms in special education vary across countries and school systems. This lesson is for educational planning, not clinical diagnosis.</p>
+  </header>
+
+  <section class="part" id="p0" aria-labelledby="h0">
+    <h2 id="h0">Myth or fact?</h2>
+    <p class="lede">Start by testing what you already believe. Decide whether each statement is a myth or a fact.</p>
+    <div class="mf" id="mf"></div>
+    <p class="score" id="mfscore" aria-live="polite"></p>
+  </section>
+
+  <section class="part" id="p1" aria-labelledby="h1">
+    <h2 id="h1">Explore the five areas</h2>
+    <p class="lede">Choose an area, then open each heading to read about it. Pay closest attention to the classroom interventions; you will use them in the scenarios.</p>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div id="panel" role="tabpanel"></div>
+    <p class="explored" id="explored"></p>
+  </section>
+
+  <section class="part" id="p2" aria-labelledby="h2">
+    <h2 id="h2">What might you be seeing?</h2>
+    <p class="lede">Each card describes something a teacher might observe. Select a card, then select the area it most closely matches.</p>
+    <p class="sort-help">Real learners often show overlapping characteristics, and one observation is never enough to identify a need. This activity practises recognising typical patterns; identification always comes from proper assessment.</p>
+    <div class="deck" id="deck"></div>
+    <div class="bins" id="bins"></div>
+    <p class="sort-msg" id="sortmsg" aria-live="polite"></p>
+  </section>
+
+  <section class="part" id="p3" aria-labelledby="h3">
+    <h2 id="h3">Classroom scenarios</h2>
+    <p class="lede">Read each situation and choose the response that best fits the interventions in the notes. Every option gives feedback, so it is worth reading why the other choices fall short.</p>
+    <div id="scn"></div>
+  </section>
+
+  <section class="part" id="p4" aria-labelledby="h4">
+    <h2 id="h4">Check your understanding</h2>
+    <p class="lede">Nine questions covering all five areas. Your score appears at the end.</p>
+    <div id="quiz"></div>
+  </section>
+
+  <section class="part" id="p5" aria-labelledby="h5">
+    <h2 id="h5">Bring it together</h2>
+    <p class="lede">Use this comparison as a quick reference.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th scope="col">Area</th><th scope="col">Main difficulty</th><th scope="col">Typical classroom need</th></tr></thead>
+        <tbody>
+          <tr style="--c:var(--adhd)"><td>ADHD</td><td>Attention, impulse control, activity level, organisation</td><td>Structure, movement breaks, visual schedules, positive reinforcement</td></tr>
+          <tr style="--c:var(--ebd)"><td>EBD</td><td>Emotional regulation and/or behavior affecting school functioning</td><td>Predictability, behavioral supports, emotional regulation, positive relationships</td></tr>
+          <tr style="--c:var(--sld)"><td>SLD</td><td>Specific academic skills such as reading, writing, mathematics</td><td>Explicit instruction, multisensory teaching, accommodations, assistive technology</td></tr>
+          <tr style="--c:var(--idd)"><td>IDD</td><td>Intellectual functioning and adaptive behavior</td><td>Individualised instruction, task analysis, visual supports, functional skills</td></tr>
+          <tr style="--c:var(--spl)"><td>Speech &amp; language</td><td>Speech production and/or understanding and using language</td><td>Visual supports, communication opportunities, response time, AAC when appropriate</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="principle">
+      <p class="big">Do not teach the disability; teach the learner.</p>
+      <p>Two learners with the same disability may have very different strengths, needs, interests, communication styles and support requirements. Base interventions on individual assessment, strengths, functional needs and the learner's educational goals, not on the label alone.</p>
+    </div>
+
+    <h3 style="font-size:1.4rem">Reflect</h3>
+    <p style="margin:6px 0 0;color:var(--muted);max-width:62ch">Your answers stay in this browser only.</p>
+    <label class="r" for="r1">Think of one learner you teach or have observed. What are two of their strengths?</label>
+    <textarea id="r1"></textarea>
+    <label class="r" for="r2">Which two interventions from this lesson would you try first with that learner, and why?</label>
+    <textarea id="r2"></textarea>
+    <label class="r" for="r3">Who would you collaborate with (family, guidance, SPED staff, speech-language professional) and about what?</label>
+    <textarea id="r3"></textarea>
+    <p class="saved" id="saved" aria-live="polite"></p>
+  </section>
+
+  <div class="pager">
+    <button class="btn ghost" id="prev">Previous part</button>
+    <button class="btn" id="next">Next part</button>
+  </div>
+  <footer>Based on the notes “Learners with Special Needs: Overview and Classroom Interventions.”</footer>
+</main>
+
+<script>
+(function(){
+var store={get:function(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function el(tag,attrs,html){var e=document.createElement(tag);if(attrs)for(var k in attrs){if(k==="style")e.setAttribute("style",attrs[k]);else if(k in e&&k!=="role")e[k]=attrs[k];else e.setAttribute(k,attrs[k]);}if(html!=null)e.innerHTML=html;return e;}
+
+/* ---------- parts & navigation ---------- */
+var parts=["Myth or fact","Explore","Sort","Scenarios","Quiz","Reflect"];
+var done=store.get("sned-done")||{};
+var cur=0;
+var navlist=document.getElementById("navlist");
+function drawNav(){
+  navlist.innerHTML="";
+  parts.forEach(function(p,i){
+    var b=el("button",{type:"button"},'<span class="n">'+(i+1)+'</span>'+p);
+    if(i===cur)b.setAttribute("aria-current","step");
+    if(done[i])b.classList.add("done");
+    b.onclick=function(){go(i,true)};
+    var li=el("li");li.appendChild(b);navlist.appendChild(li);
+  });
+}
+function markDone(i){done[i]=true;store.set("sned-done",done);drawNav();}
+function go(i,scroll){
+  cur=i;
+  document.querySelectorAll("section.part").forEach(function(s,j){s.classList.toggle("active",j===i)});
+  document.getElementById("prev").disabled=i===0;
+  var n=document.getElementById("next");
+  n.textContent=i===parts.length-1?"Back to start":"Next part";
+  drawNav();
+  if(scroll){var s=document.getElementById("p"+i);s.scrollIntoView({behavior:"smooth",block:"start"});}
+}
+document.getElementById("prev").onclick=function(){if(cur>0)go(cur-1,true)};
+document.getElementById("next").onclick=function(){go(cur===parts.length-1?0:cur+1,true)};
+
+/* ---------- area data ---------- */
+var A={
+adhd:{name:"ADHD",full:"Attention-Deficit/Hyperactivity Disorder",c:"--adhd",bg:"--adhd-bg",
+ def:"A neurodevelopmental disorder characterised by persistent patterns of inattention, hyperactivity and/or impulsivity that interfere with a learner's functioning and participation in school, home or social settings. In class it may affect sustaining attention, organising tasks, regulating behavior, managing time and controlling impulses.",
+ typesTitle:"Presentations",
+ types:[["Predominantly inattentive",["Difficulty sustaining attention","Easily distracted","Frequently loses materials","Difficulty organising tasks","May seem forgetful or not listening"]],["Predominantly hyperactive-impulsive",["Fidgets or leaves the seat","Talks excessively","Difficulty waiting for a turn","Interrupts others","Acts without considering consequences"]],["Combined",["Significant characteristics of both inattention and hyperactivity/impulsivity"]]],
+ causes:["Genetic factors","Differences in brain development and functioning","Prenatal factors, including exposure to certain substances","Premature birth or low birth weight","Certain environmental and developmental factors"],
+ causeNote:"Poor parenting, lack of discipline or laziness do not cause ADHD.",
+ chars:["Difficulty staying focused during lengthy activities","Shifts frequently from one task to another","Forgets instructions and loses materials","Difficulty completing assignments","Interrupts classmates; acts impulsively","Difficulty remaining seated; needs frequent movement","Struggles with time management and organising schoolwork","Performs inconsistently despite adequate ability"],
+ iv:[["Short, clear instructions","Give one or two directions at a time and ask the learner to repeat them."],["Break tasks into smaller parts","Divide a long worksheet into manageable sections."],["Visual schedules","Show the sequence of activities with words, pictures or symbols."],["Minimise distractions","Seat the learner away from distractions without isolating them."],["Movement opportunities","Allow movement breaks or classroom jobs."],["Specific positive reinforcement","“You started your task right away.” “You waited for your turn.”"],["Timers and organisational tools","Checklists, planners, timers, colour-coded folders."],["Extended or flexible time","When appropriate."],["Predictable routines","Keep the day's structure consistent."],["Behavior-support strategies","Clear expectations, consistent consequences, frequent feedback."]]},
+ebd:{name:"EBD",full:"Emotional and Behavioral Disability",c:"--ebd",bg:"--ebd-bg",
+ def:"Significant and persistent emotional or behavioral difficulties that adversely affect a learner's educational performance, social relationships, behavior or participation in school. Terms and eligibility criteria vary by jurisdiction; in school the emphasis is on how these difficulties affect learning.",
+ typesTitle:"Common areas of difficulty",
+ types:[["Externalising",["Aggression","Defiance","Disruptive behavior","Impulsivity"]],["Internalising",["Excessive anxiety","Withdrawal","Persistent sadness","Social isolation"]],["Attention-related",["Difficulty sustaining attention","Poor task engagement"]],["Social and interpersonal",["Difficulty developing relationships","Conflict with peers or adults"]],["Conduct-related",["Persistent violation of rules","Serious behavioral problems"]]],
+ typesNote:"These categories describe patterns; they are not necessarily separate diagnoses.",
+ causes:["Biological or neurological factors","Genetic vulnerability","Trauma or adverse experiences","Family and social circumstances","Peer relationships and environmental stress","School environment and academic difficulties","Inconsistent behavioral expectations","Mental health conditions"],
+ causeNote:"Do not assume a learner's behavior has one simple cause.",
+ chars:["Frequent emotional outbursts","Aggressive behavior or defiance","Withdrawal or anxiety","Difficulty forming relationships","Poor frustration tolerance; frequent conflict with classmates","Difficulty following classroom rules","Sudden changes in mood or behavior","Low engagement; avoids challenging tasks","Difficulty regulating emotions"],
+ iv:[["Clear, consistent expectations","Post rules and explicitly teach what each one means."],["Positive teacher-learner relationships","Trust improves engagement and willingness to participate."],["PBIS/PBS","Teach expected behaviors, reinforce them, identify triggers, give appropriate consequences."],["Teach emotional regulation","Name emotions, express feelings, use calming strategies, request a break, solve problems."],["Calm, predictable environment","Avoid unnecessary public confrontation."],["Functional Behavior Assessment","Antecedent → Behavior → Consequence, then identify the function of the behavior."],["Provide choices","“Would you like to do numbers 1–5 first or 6–10?”"],["Reinforce immediately and specifically","Specific feedback rather than general praise."],["Quiet/calm space","A regulation support, never a punishment."],["Collaborate","With families, guidance personnel, SPED professionals and specialists."]]},
+sld:{name:"SLD",full:"Specific Learning Disability",c:"--sld",bg:"--sld-bg",
+ def:"A neurodevelopmental condition involving persistent difficulties acquiring or using specific academic skills such as reading, writing or mathematics, despite appropriate learning opportunities and instruction. It is not simply the result of low intelligence, lack of effort, poor teaching or lack of opportunity.",
+ typesTitle:"Types",
+ types:[["Dyslexia","Reading: accurate and fluent word recognition, decoding and spelling."],["Dysgraphia","Written expression: handwriting, spelling, transcription or organising written output."],["Dyscalculia","Mathematics: number sense, calculation or mathematical reasoning."],["Other specific difficulties",["Reading comprehension","Written expression","Mathematical problem solving","Processing specific academic information"]]],
+ causes:["Genetic factors","Neurodevelopmental differences","Differences in cognitive/academic processing","Language development","Family history of learning difficulties"],
+ causeNote:"Environment can influence performance and severity, but SLD should not simply be blamed on poor teaching or lack of effort.",
+ chars:["Reading: slow reading, decoding difficulty, confusing similar words or sounds, weak fluency and comprehension","Writing: poor handwriting, frequent spelling errors, difficulty organising ideas, writing much more slowly than peers","Maths: weak number concepts, difficulty memorising basic facts, calculation errors, confusion with symbols, trouble with multi-step problems"],
+ iv:[["Explicit instruction","Teach skills systematically and directly."],["Multisensory instruction","See → Say → Hear → Touch → Write."],["Repeated practice","Plenty of chances to practise new skills."],["Graphic organisers","For comprehension, writing, sequencing and note-taking."],["Assistive technology","Text-to-speech, speech-to-text, audiobooks, spell checkers, calculators when appropriate."],["Modify amount, not the goal","15 well-chosen problems instead of 30 repetitive ones."],["Additional processing time",""],["Alternative ways to show learning","Oral response, presentation, demonstration, technology."],["Explicit vocabulary instruction",""],["Structured reading and writing support",""]]},
+idd:{name:"IDD",full:"Intellectual and Developmental Disabilities",c:"--idd",bg:"--idd-bg",
+ def:"An umbrella term for disabilities involving intellectual and/or developmental functioning. Intellectual Disability involves significant limitations in intellectual functioning and adaptive behavior (conceptual, social and practical everyday skills), with onset during the developmental period.",
+ typesTitle:"Levels of support",
+ types:[["Mild support needs",""],["Moderate support needs",""],["Extensive support needs",""],["Pervasive support needs",""]],
+ typesNote:"Contemporary approaches describe the level of support a learner needs rather than relying on IQ alone. Support depends on the individual's strengths and needs.",
+ causes:["Prenatal: genetic or chromosomal conditions, certain infections, exposure to harmful substances","Perinatal: birth complications, prematurity, lack of oxygen in certain circumstances","Postnatal: brain injury, severe infections, certain metabolic conditions, environmental factors"],
+ causeNote:"In many cases the specific cause remains unknown.",
+ chars:["Slower acquisition of academic skills","Difficulty with abstract concepts and generalising skills","Needs repeated instruction","Difficulty with problem solving and complex instructions","Communication and adaptive-skill challenges","May need assistance with self-care","Needs additional time to complete tasks"],
+ charNote:"Learners with IDD also have individual strengths, interests, preferences and learning capacities.",
+ iv:[["Individualised instruction","Based on the learner's strengths and needs."],["Break tasks into small steps","Wash hands → turn on water → wet hands → apply soap → rub → rinse → dry."],["Task analysis","Identify the specific steps needed to complete a task."],["Concrete materials","Concrete → Representational → Abstract."],["Visual supports","Pictures, symbols, schedules, checklists, demonstrations."],["Repetition across settings","So skills generalise."],["Functional and life skills","Self-care, communication, money, time, safety, community, vocational skills."],["Prompting and fading","Give the help needed, then reduce it as independence grows."],["Positive reinforcement",""],["Inclusion and participation","Don't automatically separate the learner when accommodations can support participation."]]},
+spl:{name:"Speech & language",full:"Speech and Language Disorders",c:"--spl",bg:"--spl-bg",
+ def:"Difficulties producing speech sounds, using spoken language, understanding language or communicating effectively.",
+ pull:"<b>Speech</b> is how a person produces sounds and voice. <b>Language</b> is how a person understands and uses a communication system.",
+ typesTitle:"Types",
+ types:[["Articulation / speech sound","Difficulty producing particular sounds, e.g. “wabbit” for “rabbit”."],["Fluency","Flow, rhythm or rate, e.g. stuttering, repetitions, prolongations."],["Voice","Problems with pitch, loudness or voice quality."],["Receptive language","Understanding language: following directions, vocabulary."],["Expressive language","Expressing ideas: limited vocabulary, building sentences."],["Receptive-expressive","Difficulty both understanding and expressing language."],["Pragmatic / social communication","Turn-taking, social cues, staying on topic, adjusting to situations."]],
+ causes:["Genetic factors","Neurodevelopmental differences","Hearing loss","Neurological or developmental conditions","Brain injury","Oral-motor difficulties","Prematurity","Environmental and developmental factors"],
+ chars:["Difficulty pronouncing certain sounds; stuttering","Limited vocabulary","Difficulty following instructions or understanding questions","Short or grammatically incomplete sentences","Difficulty explaining ideas or joining discussions","Avoids speaking in front of others","Difficulty with figurative language and social communication"],
+ iv:[["Clear, simple directions","Short sentences, no unnecessary complexity."],["Visual supports","Pictures, symbols, organisers, written instructions, demonstrations."],["Additional response time","Don't finish the learner's sentences for them."],["Model language naturally","Learner: “He go school.” Teacher: “Yes, he goes to school.”"],["AAC when appropriate","Communication boards, picture symbols, speech-generating devices, sign support."],["Meaningful communication","Pair work, small groups, role-play, structured conversations."],["Don't tell a learner who stutters to “slow down”","Keep a patient, accepting environment instead."],["Check understanding","Ask them to explain or demonstrate the direction, or use a visual checklist."],["Collaborate with speech-language professionals","Follow qualified recommendations."],["Multiple ways to show knowledge","Drawing, pointing, writing, demonstration, AAC, technology, oral response."]]}
+};
+var keys=["adhd","ebd","sld","idd","spl"];
+function cvars(k){return "--c:var("+A[k].c+");--cbg:var("+A[k].bg+")";}
+
+/* ---------- part 1: myth or fact ---------- */
+var MF=[
+ ["ADHD is caused by poor parenting or a lack of discipline.","myth","ADHD involves genetic factors and differences in brain development. Poor parenting, lack of discipline and laziness do not cause it."],
+ ["A learner with a specific learning disability usually has low intelligence.","myth","SLD is not the result of low intelligence, lack of effort or poor teaching. It affects specific academic skills."],
+ ["Speech and language mean the same thing.","myth","Speech is how sounds and voice are produced; language is how a communication system is understood and used."],
+ ["Telling a learner who stutters to “slow down” is a helpful strategy.","myth","The notes say to avoid this. A patient, accepting communication environment helps more."],
+ ["For many learners with intellectual disability, the specific cause is never identified.","fact","In many cases the specific cause remains unknown, even when possible prenatal, perinatal and postnatal causes are considered."],
+ ["A quiet corner can be used as a consequence when a learner misbehaves.","myth","A calm space is a regulation support, not a punishment."],
+ ["Giving fewer, carefully chosen problems can support a learner with SLD without lowering the learning goal.","fact","Modify the amount of work, not the goal: 15 well-selected problems can replace 30 repetitive ones."]
+];
+var mfAnswered=0,mfRight=0,mfBox=document.getElementById("mf");
+MF.forEach(function(m){
+  var d=el("div",{className:"mf-item"});
+  d.appendChild(el("p",{className:"claim"},m[0]));
+  var acts=el("div",{className:"mf-actions"});
+  var fb=el("div",{"aria-live":"polite"});
+  ["myth","fact"].forEach(function(ch){
+    var b=el("button",{type:"button"},ch==="myth"?"Myth":"Fact");
+    b.onclick=function(){
+      var ok=ch===m[1];mfAnswered++;if(ok)mfRight++;
+      acts.querySelectorAll("button").forEach(function(x){x.disabled=true});
+      b.classList.add(ok?"picked-right":"picked-wrong");
+      fb.className="feedback "+(ok?"good":"bad");
+      fb.innerHTML="<strong>"+(ok?"Correct. ":"Not quite. ")+"It's a "+m[1]+".</strong> "+m[2];
+      if(mfAnswered===MF.length){document.getElementById("mfscore").textContent="You got "+mfRight+" of "+MF.length+". Keep these in mind as you explore the five areas.";markDone(0);}
+    };
+    acts.appendChild(b);
+  });
+  d.appendChild(acts);d.appendChild(fb);mfBox.appendChild(d);
+});
+
+/* ---------- part 2: explorer ---------- */
+var seen=store.get("sned-seen")||{};
+var tabs=document.getElementById("tabs"),panel=document.getElementById("panel");
+function list(arr){return "<ul>"+arr.map(function(x){return "<li>"+x+"</li>"}).join("")+"</ul>";}
+function showArea(k){
+  tabs.querySelectorAll(".tab").forEach(function(t){t.setAttribute("aria-selected",t.dataset.k===k?"true":"false")});
+  var a=A[k];
+  panel.setAttribute("style",cvars(k));
+  var types=a.types.map(function(t){var body=Array.isArray(t[1])?list(t[1]):(t[1]?"<p>"+t[1]+"</p>":"");return '<div class="type"><h4>'+t[0]+"</h4>"+body+"</div>";}).join("");
+  var ivs=a.iv.map(function(v){return "<div><b>"+v[0]+"</b>"+(v[1]?"<span>"+v[1]+"</span>":"")+"</div>";}).join("");
+  panel.innerHTML='<h3>'+a.full+'</h3><p class="def">'+a.def+'</p>'+(a.pull?'<p class="pull">'+a.pull+'</p>':'')+
+   '<details><summary>'+a.typesTitle+'</summary><div class="dbody">'+(a.typesNote?'<p style="margin:0 0 10px">'+a.typesNote+'</p>':'')+'<div class="types">'+types+'</div></div></details>'+
+   '<details><summary>Possible causes and contributing factors</summary><div class="dbody">'+list(a.causes)+(a.causeNote?'<p class="pull" style="margin:12px 0 0"><b>Remember:</b> '+a.causeNote+'</p>':'')+'</div></details>'+
+   '<details><summary>What you might see in class</summary><div class="dbody">'+list(a.chars)+(a.charNote?'<p class="pull" style="margin:12px 0 0">'+a.charNote+'</p>':'')+'</div></details>'+
+   '<details><summary>Classroom interventions</summary><div class="dbody"><div class="iv">'+ivs+'</div></div></details>';
+  seen[k]=true;store.set("sned-seen",seen);
+  var n=keys.filter(function(x){return seen[x]}).length;
+  document.getElementById("explored").textContent="You have opened "+n+" of 5 areas.";
+  if(n===5)markDone(1);
+}
+keys.forEach(function(k){
+  var b=el("button",{type:"button",className:"tab",role:"tab",style:cvars(k)},A[k].name+"<small>"+A[k].full+"</small>");
+  b.dataset.k=k;b.onclick=function(){showArea(k)};tabs.appendChild(b);
+});
+showArea("adhd");
+
+/* ---------- part 3: sort ---------- */
+var S=[
+ ["Says “wabbit” instead of “rabbit”","spl","Difficulty producing a particular sound points to an articulation (speech sound) difficulty."],
+ ["Often leaves the seat and interrupts classmates","adhd","Leaving the seat and interrupting are typical of the hyperactive-impulsive presentation."],
+ ["Reads slowly and struggles to decode words despite good instruction","sld","Persistent decoding and fluency difficulty despite good teaching fits dyslexia (SLD)."],
+ ["Withdraws from peers and seems persistently sad","ebd","Withdrawal and persistent sadness are internalising patterns described under EBD."],
+ ["Learns a skill in class but cannot use it at home or in the canteen","idd","Difficulty generalising skills across settings is described under IDD."],
+ ["Has trouble understanding vocabulary and following spoken directions","spl","Difficulty understanding language is a receptive language difficulty."],
+ ["Struggles to memorise basic math facts and confuses math symbols","sld","These are characteristics of a specific learning disability in mathematics (dyscalculia)."],
+ ["Has frequent emotional outbursts and conflicts with classmates","ebd","Outbursts, poor regulation and peer conflict are described under EBD."],
+ ["Loses materials, forgets instructions, and performs inconsistently despite ability","adhd","Losing materials, forgetting instructions and inconsistent performance fit the inattentive presentation."],
+ ["Needs support with self-care and everyday adaptive skills","idd","Limitations in adaptive behavior, including self-care, are central to intellectual disability."]
+];
+var deck=document.getElementById("deck"),bins=document.getElementById("bins"),msg=document.getElementById("sortmsg");
+var selected=null,placed=0,firstTry=0,tried={};
+S.forEach(function(s,i){
+  var c=el("button",{type:"button",className:"card","aria-pressed":"false"},s[0]);
+  c.dataset.i=i;
+  c.onclick=function(){
+    deck.querySelectorAll(".card").forEach(function(x){x.setAttribute("aria-pressed","false")});
+    c.setAttribute("aria-pressed","true");selected=c;
+    msg.textContent="Now choose the area for: “"+s[0]+"”";msg.style.color="";
+  };
+  deck.appendChild(c);
+});
+keys.forEach(function(k){
+  var b=el("button",{type:"button",className:"bin",style:cvars(k),"aria-label":"Place selected card in "+A[k].full},"<h4>"+A[k].name+"</h4>");
+  b.onclick=function(){
+    if(!selected){msg.textContent="Select a card first.";msg.style.color="";return;}
+    var i=+selected.dataset.i,s=S[i];
+    if(s[1]===k){
+      if(!tried[i])firstTry++;
+      b.appendChild(el("span",{className:"placed"},s[0]));
+      selected.remove();selected=null;placed++;
+      msg.textContent="Yes. "+s[2];msg.style.color="var(--good)";
+      if(placed===S.length){msg.textContent="All sorted. "+firstTry+" of "+S.length+" placed on the first try. Remember: patterns like these prompt a closer look and proper assessment, never a label on their own.";markDone(2);}
+    }else{
+      tried[i]=true;
+      selected.classList.remove("shake");void selected.offsetWidth;selected.classList.add("shake");
+      msg.textContent="Not the closest match. Look again at the “What you might see in class” lists in Explore.";msg.style.color="var(--bad)";
+    }
+  };
+  bins.appendChild(b);
+});
+
+/* ---------- generic multiple-choice runner ---------- */
+function runner(box,items,opts){
+  var idx=0,score=0;
+  function draw(){
+    box.innerHTML="";
+    if(idx>=items.length){
+      var r=el("div",{className:"result"},'<div class="big">'+score+" / "+items.length+"</div><p>"+opts.end(score,items.length)+'</p>');
+      var again=el("button",{type:"button",className:"btn ghost"},"Try again");
+      again.onclick=function(){idx=0;score=0;draw()};r.appendChild(again);box.appendChild(r);opts.onDone();return;
+    }
+    var q=items[idx];
+    box.appendChild(el("p",{className:"counter"},(opts.noun)+" "+(idx+1)+" of "+items.length));
+    var m=el("div",{className:"meter"},"<i style=\"width:"+(idx/items.length*100)+"%\"></i>");box.appendChild(m);
+    var card=el("div",{className:"scn",style:q.k?cvars(q.k):""});
+    if(q.who)card.appendChild(el("span",{className:"who"},q.who));
+    card.appendChild(el("p",{className:"story"},q.q));
+    var o=el("div",{className:"opts"}),fb=el("div",{"aria-live":"polite"}),first=true;
+    var nxt=el("button",{type:"button",className:"btn",style:"margin-top:14px;display:none"},idx===items.length-1?"See results":"Next");
+    nxt.onclick=function(){idx++;draw();box.scrollIntoView({behavior:"smooth",block:"start"})};
+    q.o.forEach(function(op,j){
+      var b=el("button",{type:"button",className:"opt"},op[0]);
+      b.onclick=function(){
+        var ok=j===q.a;
+        if(first&&ok)score++;
+        first=false;
+        b.classList.add(ok?"right":"wrong");
+        fb.className="feedback "+(ok?"good":"bad");
+        fb.innerHTML="<strong>"+(ok?"Best choice. ":"Not the best choice. ")+"</strong>"+op[1];
+        if(ok){o.querySelectorAll(".opt").forEach(function(x){x.disabled=true});nxt.style.display="inline-block";}
+        else b.disabled=true;
+      };
+      o.appendChild(b);
+    });
+    card.appendChild(o);card.appendChild(fb);card.appendChild(nxt);box.appendChild(card);
+  }
+  draw();
+}
+
+/* ---------- part 4: scenarios ---------- */
+var SC=[
+ {who:"ADHD: Marco, Grade 4",k:"adhd",q:"Marco gets a 30-item worksheet. Within five minutes he has left his seat twice, lost his pencil, and moved on to doodling. He rarely finishes.",a:1,o:[
+  ["Move his desk to the back corner, facing the wall.","Reducing distractions matters, but the notes warn against isolating the learner."],
+  ["Split the worksheet into sections with a checklist, and give him a short movement job between sections.","Breaking tasks into smaller parts, organisational tools and planned movement all come straight from the ADHD interventions."],
+  ["Keep him in at recess until the worksheet is done.","Removing movement is likely to make focus harder and doesn't teach the skills he needs."],
+  ["Hand him the full worksheet again with a longer deadline.","Extra time can help, but on its own it doesn't address the length and structure of the task."]]},
+ {who:"Speech & language: Ana, Grade 3",k:"spl",q:"Ana stutters when she reads aloud. A few classmates sigh while they wait, and she has started to avoid volunteering.",a:2,o:[
+  ["Tell her kindly to slow down and take a deep breath.","The notes specifically advise against telling a learner who stutters to “slow down”."],
+  ["Finish her words for her so she doesn't feel stuck.","Completing a learner's sentences removes her chance to communicate. Give response time instead."],
+  ["Give her unhurried time, model patient listening for the class, and offer other ways to share, such as pair reading.","A patient, accepting environment plus multiple ways to participate matches the speech and language interventions."],
+  ["Excuse her from all speaking activities from now on.","Avoidance can grow. She needs supported, meaningful chances to communicate, not removal."]]},
+ {who:"EBD: Jun, Grade 6",k:"ebd",q:"Whenever difficult math problems appear, Jun shouts and throws his notebook. He is then sent out of class, and the pattern repeats.",a:0,o:[
+  ["Look at the Antecedent → Behavior → Consequence pattern, teach him to request a break, and offer choices like “numbers 1–5 or 6–10 first?”","The pattern suggests the behavior may help him escape hard tasks. An FBA, a replacement behavior and choices address that function."],
+  ["Reprimand him in front of the class so others learn the rule.","The notes advise avoiding unnecessary public confrontation."],
+  ["Send him to the calm corner as a consequence each time.","A calm space should support regulation, not act as punishment."],
+  ["Keep sending him out; he will eventually learn.","Being sent out lets him escape the math, which may be reinforcing the very behavior you want to reduce."]]},
+ {who:"SLD: Liza, Grade 5",k:"sld",q:"Liza explains her ideas clearly when she talks, but her written work is short, slow and full of spelling errors.",a:3,o:[
+  ["Assign extra copying practice until her handwriting improves.","Repetitive copying doesn't target organisation or spelling and may feel like punishment."],
+  ["Lower the goal so she only writes one sentence.","The notes say to modify the amount of work without lowering the learning goal."],
+  ["Remind her to try harder, since she clearly knows the content.","SLD is not a result of lack of effort."],
+  ["Use a graphic organiser to plan, allow speech-to-text, and sometimes let her show learning orally.","Graphic organisers, assistive technology and alternative ways to demonstrate learning are all SLD interventions."]]},
+ {who:"IDD: Ben, Grade 7, moderate support needs",k:"idd",q:"Ben's goal is to buy a snack at the school canteen by himself.",a:2,o:[
+  ["Give him a worksheet about coin values.","Paper practice alone is abstract, and skills need practice in real settings to generalise."],
+  ["Buy the snack for him to avoid stress at the counter.","This removes the chance to build independence."],
+  ["Break the task into steps with picture cues, practise at the real canteen, and fade prompts as he gains independence.","Task analysis, visual supports, practice across settings and prompting-and-fading are core IDD interventions."],
+  ["Show him once and expect him to repeat it.","Learners with IDD often need repeated instruction and practice."]]}
+];
+runner(document.getElementById("scn"),SC,{noun:"Scenario",end:function(s,n){return s===n?"Every best choice on the first try. You matched each situation to the right interventions.":"Scored on first attempts. Review the interventions in Explore for any scenario that tripped you up."},onDone:function(){markDone(3)}});
+
+/* ---------- part 5: quiz ---------- */
+var Q=[
+ {q:"Which of these is NOT a cause of ADHD?",a:2,o:[["Genetic factors","Genetics is one of the factors research links to ADHD."],["Premature birth or low birth weight","This is listed as a possible contributing factor."],["Poor parenting or lack of discipline","Correct: the notes are explicit that these do not cause ADHD."],["Differences in brain development","This is a recognised contributing factor."]]},
+ {q:"A learner has difficulty following directions and understanding vocabulary. This describes a…",a:1,o:[["Voice disorder","Voice disorders involve pitch, loudness or quality."],["Receptive language difficulty","Correct: receptive language is about understanding language."],["Fluency disorder","Fluency is about flow and rhythm, such as stuttering."],["Expressive language difficulty","Expressive language is about getting ideas out, not taking them in."]]},
+ {q:"Which is an example of an internalising behavior in EBD?",a:3,o:[["Aggression","Aggression is externalising."],["Defiance","Defiance is externalising."],["Disruptive behavior","Disruption is externalising."],["Withdrawal","Correct: withdrawal, anxiety and persistent sadness are internalising."]]},
+ {q:"Contemporary approaches to intellectual disability place most emphasis on…",a:0,o:[["The level of support the learner needs","Correct: mild, moderate, extensive or pervasive support needs."],["IQ score alone","The notes describe moving away from classifying by IQ alone."],["The cause of the disability","The cause is often unknown and doesn't determine support."],["The learner's grade level","Support depends on individual strengths and needs."]]},
+ {q:"Which sequence helps learners move from hands-on materials to symbols?",a:1,o:[["Abstract → Concrete → Representational","This reverses the order."],["Concrete → Representational → Abstract","Correct: start with real objects, then pictures, then symbols."],["Representational → Abstract → Concrete","Start with the concrete, not pictures."],["See → Say → Hear → Touch → Write","That is the multisensory sequence for SLD, not the CRA progression."]]},
+ {q:"A learner says “He go school.” What is the recommended teacher response?",a:2,o:[["“No, that's wrong. Say it properly.”","Direct correction can discourage a learner from speaking."],["Ignore it and move on.","This misses a natural chance to model language."],["“Yes, he goes to school.”","Correct: naturally model the correct form while responding to the meaning."],["Ask the class to correct them.","This risks embarrassing the learner."]]},
+ {q:"Which question does a Functional Behavior Assessment aim to answer?",a:3,o:[["Which diagnosis the learner has","An FBA is about behavior, not diagnosis."],["Which punishment will work fastest","An FBA is not about choosing punishments."],["Whether the learner's parents are to blame","Behavior rarely has one simple cause."],["What function the behavior serves, using Antecedent → Behavior → Consequence","Correct: understanding the function guides the support."]]},
+ {q:"Which strategy is listed for BOTH ADHD and IDD?",a:0,o:[["Breaking tasks into smaller steps","Correct: it appears in both sets of interventions."],["AAC devices","AAC appears under speech and language."],["Functional Behavior Assessment","FBA appears under EBD."],["Multisensory See-Say-Hear-Touch-Write","This appears under SLD."]]},
+ {q:"What is the key principle across all five areas?",a:1,o:[["Group learners by disability label","Two learners with the same label can have very different needs."],["Teach the learner, not the disability","Correct: plan from individual strengths, needs and goals."],["Always separate learners for specialised teaching","The notes promote inclusion when support makes participation possible."],["Use the same intervention for everyone in a category","Interventions should be individualised."]]}
+];
+runner(document.getElementById("quiz"),Q,{noun:"Question",end:function(s,n){return s>=n-1?"Excellent. You have a strong grasp of the five areas.":s>=Math.ceil(n*0.6)?"Good work. Revisit Explore for the questions you missed.":"Worth another pass through Explore, then try again."},onDone:function(){markDone(4)}});
+
+/* ---------- part 6: reflection ---------- */
+var saved=document.getElementById("saved"),t;
+["r1","r2","r3"].forEach(function(id){
+  var ta=document.getElementById(id);var v=store.get("sned-"+id);if(v)ta.value=v;
+  ta.addEventListener("input",function(){store.set("sned-"+id,ta.value);clearTimeout(t);saved.textContent="Saved in this browser.";t=setTimeout(function(){saved.textContent=""},1800);
+    if(["r1","r2","r3"].every(function(x){return document.getElementById(x).value.trim()}))markDone(5);});
+});
+
+go(0,false);
+})();
+</script>
+</body>
+</html>
